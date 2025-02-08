@@ -52,8 +52,8 @@ export default function FeedbackForm({ onAddToList }: FeedbackFormProps) {
         placeholder=""
         spellCheck={false}
       />
-      <label htmlFor="feedback-textarea">
-        Enter your feedback here, remember to #hashtag the company
+      <label htmlFor="feedback-textarea" className="pr-2">
+        Enter your feedback here, remember to #hashtag the company.
       </label>
       <div>
         <p className="u-italic">{charsLeft}</p>

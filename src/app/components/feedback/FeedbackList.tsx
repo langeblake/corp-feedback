@@ -11,13 +11,17 @@ export default function FeedbackList() {
     state.getFilteredFeedbackItems()
   ));
 
+  const sortedFeedbackItems = [...filteredFeedbackItems].sort(
+    (a, b) => b.upvoteCount - a.upvoteCount
+  );
+
   return (
     <ol className="feedback-list">
       {loading && <Spinner />}
 
       {errorMessage && <ErrorMessage message={errorMessage} />}
 
-      {filteredFeedbackItems.map((feedbackItem) => (
+      {sortedFeedbackItems.map((feedbackItem) => (
         <FeedbackItem key={feedbackItem.id} feedbackItem={feedbackItem} />
       ))}
     </ol>

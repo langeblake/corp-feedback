@@ -1,6 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { create } from "zustand";
 import { TFeedbackItem } from "../libs/types";
-
 
 type Store = {
   feedbackItems: TFeedbackItem[];
@@ -12,13 +12,21 @@ type Store = {
   addItemToList: (text: string) => Promise<void>;
   selectCompany: (company: string) => void;
   fetchFeedbackItems: () => Promise<void>;
+  upvoteFeedbackItem: (id: string) => Promise<void>;
 };
 
 export const useFeedbackItemsStore = create<Store>((set, get) => ({
   feedbackItems: [],
   loading: false,
-  errorMessage: "", 
+  errorMessage: "",
   selectedCompany: "",
+
+  hasUpvoted: (feedbackId: number) => {
+    const upvotedItems = JSON.parse(
+      localStorage.getItem("upvotedItems") || "[]"
+    );
+    return upvotedItems.includes(feedbackId);
+  },
 
   getCompanyList: () => {
     return get()
@@ -37,8 +45,10 @@ export const useFeedbackItemsStore = create<Store>((set, get) => ({
 
   addItemToList: async (text: string) => {
     try {
-      const companyName = text.split(" ").find((word) => word.includes("#"))?.substring(1);
-
+      const companyName = text
+        .split(" ")
+        .find((word) => word.includes("#"))
+        ?.substring(1);
       if (!companyName) {
         throw new Error("Company name not found in text.");
       }
@@ -64,9 +74,7 @@ export const useFeedbackItemsStore = create<Store>((set, get) => ({
       }
 
       const savedItem = await response.json();
-
       set((prev) => ({ feedbackItems: [...prev.feedbackItems, savedItem] }));
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       set(() => ({ errorMessage: "Failed to add feedback. Try again." }));
     }
@@ -77,7 +85,7 @@ export const useFeedbackItemsStore = create<Store>((set, get) => ({
   },
 
   fetchFeedbackItems: async () => {
-    set(() => ({ loading: true }));
+    set(() => ({ loading: true, errorMessage: "" }));
 
     try {
       const response = await fetch("/api/feedback");
@@ -87,11 +95,44 @@ export const useFeedbackItemsStore = create<Store>((set, get) => ({
 
       const data = await response.json();
       set(() => ({ feedbackItems: data }));
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       set(() => ({ errorMessage: "Something went wrong." }));
+    } finally {
+      set(() => ({ loading: false }));
     }
+  },
 
-    set(() => ({ loading: false }));
+  upvoteFeedbackItem: async (id: string) => {
+    try {
+      const response = await fetch("/api/feedback", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to upvote feedback");
+      }
+
+      const upvotedItems = JSON.parse(
+        localStorage.getItem("upvotedItems") || "[]"
+      );
+      localStorage.setItem(
+        "upvotedItems",
+        JSON.stringify([...upvotedItems, id])
+      );
+
+      set((state) => ({
+        feedbackItems: state.feedbackItems.map((item) =>
+          item.id.toString() === id
+            ? { ...item, upvoteCount: item.upvoteCount + 1 }
+            : item
+        ),
+      }));
+    } catch (error) {
+      set(() => ({ errorMessage: "Failed to upvote feedback. Try again." }));
+    }
   },
 }));

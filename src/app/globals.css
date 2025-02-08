@@ -168,7 +168,8 @@ h1 *::selection {
 
 /* FORM */
 .form {
-  margin-top: 20px;
+  margin-top: 25px;
+  margin-bottom: 10px;
   height: 123px;
   width: 470px;
   background-color: rgba(255, 255, 255, 0.04);
@@ -499,7 +500,7 @@ form button span::selection {
 /* HASHTAGS */
 .hashtags {
   position: absolute;
-  right: -137px;
+  right: -120px;
   top: 0px;
 }
 
@@ -539,14 +540,14 @@ form button span::selection {
 .footer {
   position: absolute;
   transform: rotate(-90deg);
-  left: -220px;
-  bottom: 190px;
+  left: -250px;
+  bottom: 210px;
 }
 
 /* COPYRIGHT */
 .footer > small {
   color: #a6adb5;
-  font-size: 11px;
+  font-size: 14px;
 }
 
 .footer > small *::selection {

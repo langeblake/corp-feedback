@@ -35,3 +35,24 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Failed to add feedback" }, { status: 500 });
   }
 }
+
+// PATCH: Update the upvote count of a feedback item
+export async function PATCH(req: Request) {
+  const { id } = await req.json();
+
+  try {
+    const feedbackItem = await prisma.feedback.update({
+      where: { id: Number(id) },
+      data: { upvoteCount: { increment: 1 } },
+    });
+
+    if (!feedbackItem) {
+      return NextResponse.json({ message: 'Feedback item not found' }, { status: 404 });
+    }
+
+    return NextResponse.json(feedbackItem, { status: 200 });
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (error) {
+    return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
+  }
+}

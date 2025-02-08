@@ -1,9 +1,9 @@
+import ParabolicEllipse from "@/assets/wavey-fingerprint.svg";
+
 export default function Pattern() {
   return (
-    <img
-      src="https://bytegrad.com/course-assets/js/1/pattern.svg"
-      alt="pattern"
-      className="pattern"
-    />
+    <div className="w-full opacity-30 pattern z-10">
+      <ParabolicEllipse width="100%" height="auto" />
+    </div>
   );
 }
