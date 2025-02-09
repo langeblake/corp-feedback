@@ -56,7 +56,6 @@ export const useFeedbackItemsStore = create<Store>((set, get) => ({
       const newItem: Omit<TFeedbackItem, "id"> = {
         text,
         upvoteCount: 0,
-        daysAgo: 0,
         company: companyName,
         badgeLetter: companyName.substring(0, 1).toUpperCase(),
       };

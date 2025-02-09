@@ -7,8 +7,14 @@ const prisma = new PrismaClient();
 export async function GET() {
   try {
     const feedbackItems = await prisma.feedback.findMany();
-    return NextResponse.json(feedbackItems, { status: 200 });
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
+    const now = new Date();
+    const updatedFeedbackItems = feedbackItems.map(item => ({
+      ...item,
+      daysAgo: Math.floor((now.getTime() - new Date(item.createdAt).getTime()) / (1000 * 60 * 60 * 24)), // Days difference
+    }));
+
+    return NextResponse.json(updatedFeedbackItems, { status: 200 });
   } catch (error) {
     return NextResponse.json({ error: "Failed to fetch feedback" }, { status: 500 });
   }
@@ -23,14 +29,12 @@ export async function POST(req: Request) {
       data: {
         text,
         upvoteCount: 0,
-        daysAgo: 0,
         company,
         badgeLetter,
       },
     });
 
     return NextResponse.json(newFeedback, { status: 201 });
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     return NextResponse.json({ error: "Failed to add feedback" }, { status: 500 });
   }
@@ -51,7 +55,6 @@ export async function PATCH(req: Request) {
     }
 
     return NextResponse.json(feedbackItem, { status: 200 });
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
   }
