@@ -13,7 +13,7 @@ export async function POST(req: Request) {
     }
   
     try {
-      // 🔹 Delete all feedback where `is_protected` is FALSE
+      // 🔹 Delete all feedback where `isProtected` is FALSE
       await prisma.feedback.deleteMany({
         where: { isProtected: false },
       });
