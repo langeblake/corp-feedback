@@ -45,35 +45,39 @@ export const useFeedbackItemsStore = create<Store>((set, get) => ({
 
   addItemToList: async (text: string) => {
     try {
-      const companyName = text
-        .split(" ")
-        .find((word) => word.includes("#"))
-        ?.substring(1);
+      const companyName = text.split(" ").find((word) => word.includes("#"))?.substring(1);
+  
       if (!companyName) {
         throw new Error("Company name not found in text.");
       }
-
-      const newItem: Omit<TFeedbackItem, "id" | "daysAgo"> = {
+  
+      const newItem = {
         text,
         upvoteCount: 0,
         company: companyName,
-        badgeLetter: companyName.substring(0, 1).toUpperCase(),
+        badgeLetter: companyName.charAt(0).toUpperCase(),
+        createdAt: new Date(), // ✅ Store creation time
       };
-
+  
       const response = await fetch("/api/feedback", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newItem),
       });
-
+  
       if (!response.ok) {
         throw new Error("Failed to add feedback");
       }
-
+  
       const savedItem = await response.json();
-      set((prev) => ({ feedbackItems: [...prev.feedbackItems, savedItem] }));
+  
+      // ✅ Calculate `daysAgo` dynamically
+      const now = new Date();
+      const daysAgo = Math.floor((now.getTime() - new Date(savedItem.createdAt).getTime()) / (1000 * 60 * 60 * 24));
+  
+      // ✅ Add `daysAgo` before updating Zustand store
+      set((prev) => ({ feedbackItems: [...prev.feedbackItems, { ...savedItem, daysAgo }] }));
+  
     } catch (error) {
       set(() => ({ errorMessage: "Failed to add feedback. Try again." }));
     }
