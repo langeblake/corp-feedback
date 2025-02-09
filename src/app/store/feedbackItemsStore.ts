@@ -53,7 +53,7 @@ export const useFeedbackItemsStore = create<Store>((set, get) => ({
         throw new Error("Company name not found in text.");
       }
 
-      const newItem: Omit<TFeedbackItem, "id"> = {
+      const newItem: Omit<TFeedbackItem, "id" | "daysAgo"> = {
         text,
         upvoteCount: 0,
         company: companyName,
