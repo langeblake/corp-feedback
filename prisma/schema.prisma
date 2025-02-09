@@ -11,7 +11,9 @@ model Feedback {
   id          Int      @id @default(autoincrement())
   text        String
   upvoteCount Int      @default(0)
+  daysAgo     Int      @default(0)
   company     String
   badgeLetter String
+  isProtected Boolean  @default(false)
   createdAt   DateTime @default(now())
 }

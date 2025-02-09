@@ -1,0 +1,11 @@
+{
+    "version": 2,
+    "cron": [
+      {
+        "path": "/api/admin/cleanup",
+        "schedule": "0 0 * * *",
+        "headers": { "Authorization": "Bearer ${ADMIN_SECRET}" }
+      }
+    ]
+  }
+  

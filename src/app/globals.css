@@ -153,6 +153,7 @@ h1 *::selection {
 /* LOGO */
 .logo {
   height: 27.5px;
+  margin-top: 20px;
 }
 
 .logo::selection {
