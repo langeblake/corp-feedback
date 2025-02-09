@@ -4,7 +4,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 
-export async function POST(req: Request) {
+export async function GET(req: Request) {
     const headers = new Headers(req.headers);
     const authHeader = headers.get("Authorization");
   
