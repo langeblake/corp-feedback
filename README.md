@@ -10,7 +10,7 @@ CorpFeedback is a public feedback board where users can share opinions about com
 - Backend API for managing feedback data.
 ß
 ## 🛠 Tech Stack
-- **Frontend**: Next.js, React, TypeScript, Zustand, Tailwind CSS
+- **Frontend**: Next.js, React, TypeScript, Zustand
 - **Backend**: Next.js API Routes, Prisma
 - **Database**: PostgreSQL (Supabase)
 - **Deployment**: Vercel
