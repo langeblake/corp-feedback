@@ -1,6 +1,5 @@
 {
-    "version": 2,
-    "cron": [
+    "crons": [
       {
         "path": "/api/admin/cleanup",
         "schedule": "0 0 * * *"
